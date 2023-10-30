@@ -1,35 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import FirstComponent from "../components/FirstComponent";
+import SecondComponent from "../components/SecondComponent";
+import ThirdComponent from "../components/ThirdComponent";
+import {
+  getCounterFromLocalStorage,
+  setCounterToLocalStorage,
+} from "../utils/localStorage";
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState(1);
+  const [counter, setCounter] = useState(getCounterFromLocalStorage);
+  useEffect(() => {
+    setCounterToLocalStorage(counter);
+  }, [counter]);
+
+  const increaseCounter = () => {
+    setCounter((prevCounter) => prevCounter + 1);
+  };
+
+  const decreaseCounter = () => {
+    if (counter > 0) {
+      setCounter((prevCounter) => prevCounter - 1);
+    }
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 1:
-        return <Component1 />;
+        return (
+          <FirstComponent
+            counter={counter}
+            increaseCounter={increaseCounter}
+            decreaseCounter={decreaseCounter}
+          />
+        );
       case 2:
-        return <Component2 />;
+        return (
+          <SecondComponent
+            counter={counter}
+            increaseCounter={increaseCounter}
+            decreaseCounter={decreaseCounter}
+          />
+        );
       case 3:
-        return <Component3 />;
+        return (
+          <ThirdComponent
+            counter={counter}
+            increaseCounter={increaseCounter}
+            decreaseCounter={decreaseCounter}
+          />
+        );
       default:
         return null;
     }
   };
 
-  const Component1 = () => <div className="p-4">Component 1</div>;
-  const Component2 = () => <div className="p-4">Component 2</div>;
-  const Component3 = () => <div className="p-4">Component 3</div>;
-
   return (
-    <div>
-      <div className="flex">
+    <div className="">
+      <div className="flex justify-center mt-10">
         <button
           onClick={() => setActiveTab(1)}
           className={`py-2 px-6 ${
             activeTab === 1 ? "bg-rose-500" : "bg-rose-300"
           } text-white`}
         >
-          Tab 1
+          First
         </button>
         <button
           onClick={() => setActiveTab(2)}
@@ -37,7 +72,7 @@ const Home = () => {
             activeTab === 2 ? "bg-rose-500" : "bg-rose-300"
           } text-white`}
         >
-          Tab 2
+          Second
         </button>
         <button
           onClick={() => setActiveTab(3)}
@@ -45,10 +80,10 @@ const Home = () => {
             activeTab === 3 ? "bg-rose-500" : "bg-rose-300"
           } text-white`}
         >
-          Tab 3
+          Third
         </button>
       </div>
-      {renderTabContent()}
+      <div className="flex justify-center my-4">{renderTabContent()}</div>
     </div>
   );
 };
